@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Tropas - Tribal Wars</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f0e6d6;
+      font-family: 'Merriweather', serif;
+      color: #4d2c1a;
+    }
+    .container {
+      max-width: 800px;
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+    .card {
+      background-color: #e6d9c4;
+      border: 2px solid #c8b79b;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .card-header {
+      background-color: #d1c1a8;
+      border-bottom: 2px solid #c8b79b;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: #5a3a2a;
+    }
+    .btn-calculate {
+      background-color: #8d6d4a;
+      border-color: #7a5c3a;
+      color: #fff;
+      font-weight: bold;
+      padding: 10px 20px;
+      font-size: 1.1rem;
+    }
+    .btn-calculate:hover {
+      background-color: #7a5c3a;
+      border-color: #674c2a;
+      color: #fff;
+    }
+    .form-check-label { font-weight: bold; }
+    .cost-info { font-size: 0.85rem; color: #6c584c; margin-left: 10px; }
+    .result-card { display: none; }
+    .resource-icon { width: 20px; height: 20px; margin-right: 5px; }
+    .result-troops { font-size: 1.1rem; font-weight: bold; }
+    .result-summary { font-size: 0.9rem; color: #6c584c; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="text-center mb-4">
+      <h1 class="display-5">Calculadora de Tropas</h1>
+      <p class="lead">Tribal Wars</p>
+    </div>
+    <div class="card">
+      <div class="card-header">Seus Recursos e Tropas</div>
+      <div class="card-body">
+        <h5 class="mb-3">1. Informe seus recursos:</h5>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label for="wood" class="form-label">
+              <img src="https://dsbr.innogamescdn.com/asset/5f3c932/graphic/holz.png" alt="Madeira" class="resource-icon"> Madeira
+            </label>
+            <input type="number" class="form-control" id="wood" placeholder="Ex: 10000" min="0">
+          </div>
+          <div class="col-md-4">
+            <label for="clay" class="form-label">
+              <img src="https://dsbr.innogamescdn.com/asset/5f3c932/graphic/lehm.png" alt="Argila" class="resource-icon"> Argila
+            </label>
+            <input type="number" class="form-control" id="clay" placeholder="Ex: 10000" min="0">
+          </div>
+          <div class="col-md-4">
+            <label for="iron" class="form-label">
+              <img src="https://dsbr.innogamescdn.com/asset/5f3c932/graphic/eisen.png" alt="Ferro" class="resource-icon"> Ferro
+            </label>
+            <input type="number" class="form-control" id="iron" placeholder="Ex: 10000" min="0">
+          </div>
+        </div>
+        <hr class="my-4">
+        <h5 class="mb-3">2. Selecione as tropas para o cálculo:</h5>
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" value="lanceiro" id="checkLancer" checked>
+          <label class="form-check-label" for="checkLancer">Lanceiro</label>
+          <span class="cost-info">(50 Madeira, 30 Argila, 10 Ferro)</span>
+        </div>
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" value="espadachim" id="checkSword" checked>
+          <label class="form-check-label" for="checkSword">Espadachim</label>
+          <span class="cost-info">(30 Madeira, 30 Argila, 70 Ferro)</span>
+        </div>
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" value="barbaro" id="checkAxe" checked>
+          <label class="form-check-label" for="checkAxe">Bárbaro</label>
+          <span class="cost-info">(60 Madeira, 30 Argila, 40 Ferro)</span>
+        </div>
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" value="explorador" id="checkScout">
+          <label class="form-check-label" for="checkScout">Explorador</label>
+          <span class="cost-info">(50 Madeira, 50 Argila, 20 Ferro)</span>
+        </div>
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" value="cavalaria_leve" id="checkLight">
+          <label class="form-check-label" for="checkLight">Cavalaria leve</label>
+          <span class="cost-info">(125 Madeira, 100 Argila, 250 Ferro)</span>
+        </div>
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" value="cavalaria_pesada" id="checkHeavy">
+          <label class="form-check-label" for="checkHeavy">Cavalaria pesada</label>
+          <span class="cost-info">(200 Madeira, 150 Argila, 600 Ferro)</span>
+        </div>
+        <div class="d-grid mt-4">
+          <button class="btn btn-calculate" type="button" id="calculateBtn">Calcular Tropas</button>
+        </div>
+      </div>
+    </div>
+    <div id="alert-container" class="mt-3"></div>
+    <div class="card mt-4 result-card" id="results-section">
+      <div class="card-header">Resultados do Cálculo</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <div class="p-3 border rounded h-100">
+              <h5>Cálculo 1: Maximizar Tropas</h5>
+              <p class="text-muted small">Maior uso possível dos recursos.</p>
+              <hr>
+              <div id="max-results"></div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 border rounded h-100">
+              <h5>Cálculo 2: Tropas Equilibradas</h5>
+              <p class="text-muted small">Distribuição balanceada entre os tipos selecionados.</p>
+              <hr>
+              <div id="balanced-results"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const custos = {
+      lanceiro: { madeira: 50, argila: 30, ferro: 10 },
+      espadachim: { madeira: 30, argila: 30, ferro: 70 },
+      barbaro: { madeira: 60, argila: 30, ferro: 40 },
+      explorador: { madeira: 50, argila: 50, ferro: 20 },
+      cavalaria_leve: { madeira: 125, argila: 100, ferro: 250 },
+      cavalaria_pesada: { madeira: 200, argila: 150, ferro: 600 },
+    };
+
+    document.getElementById('calculateBtn').addEventListener('click', () => {
+      const recursos = {
+        madeira: parseInt(document.getElementById('wood').value) || 0,
+        argila: parseInt(document.getElementById('clay').value) || 0,
+        ferro: parseInt(document.getElementById('iron').value) || 0,
+      };
+
+      const selecionados = [];
+      if (document.getElementById('checkLancer').checked) selecionados.push('lanceiro');
+      if (document.getElementById('checkSword').checked) selecionados.push('espadachim');
+      if (document.getElementById('checkAxe').checked) selecionados.push('barbaro');
+      if (document.getElementById('checkScout').checked) selecionados.push('explorador');
+      if (document.getElementById('checkLight').checked) selecionados.push('cavalaria_leve');
+      if (document.getElementById('checkHeavy').checked) selecionados.push('cavalaria_pesada');
+
+      const alertContainer = document.getElementById('alert-container');
+      alertContainer.innerHTML = '';
+
+      if (selecionados.length === 0) {
+        showAlert('Por favor, selecione ao menos uma tropa.', 'warning');
+        return;
+      }
+
+      const maxResults = calcularMaximoSelecionado({ ...recursos }, selecionados);
+      const balancedResults = calcularBalanceado({ ...recursos }, selecionados);
+
+      exibirResultados('max-results', maxResults, recursos);
+      exibirResultados('balanced-results', balancedResults, recursos);
+
+      document.getElementById('results-section').style.display = 'block';
+    });
+
+    function calcularMaximoSelecionado(recursos, selecionados) {
+      let melhor = { tropas: {}, uso: 0 };
+
+      function backtrack(index, recursosRestantes, tropasAtuais) {
+        if (index === selecionados.length) {
+          const usoTotal =
+            recursos.madeira - recursosRestantes.madeira +
+            recursos.argila - recursosRestantes.argila +
+            recursos.ferro - recursosRestantes.ferro;
+
+          if (usoTotal > melhor.uso) melhor = { tropas: { ...tropasAtuais }, uso: usoTotal };
+          return;
+        }
+
+        const unidade = selecionados[index];
+        const custo = custos[unidade];
+        let max = Math.min(
+          Math.floor(recursosRestantes.madeira / custo.madeira),
+          Math.floor(recursosRestantes.argila / custo.argila),
+          Math.floor(recursosRestantes.ferro / custo.ferro)
+        );
+
+        for (let i = 0; i <= max; i++) {
+          const novosRecursos = {
+            madeira: recursosRestantes.madeira - i * custo.madeira,
+            argila: recursosRestantes.argila - i * custo.argila,
+            ferro: recursosRestantes.ferro - i * custo.ferro,
+          };
+          tropasAtuais[unidade] = i;
+          backtrack(index + 1, novosRecursos, tropasAtuais);
+        }
+      }
+
+      backtrack(0, recursos, {});
+      return melhor.tropas;
+    }
+
+    function calcularBalanceado(recursos, selecionados) {
+      const tropas = {};
+      selecionados.forEach(t => tropas[t] = 0);
+      if (selecionados.length === 0) return tropas;
+
+      const pacote = { madeira: 0, argila: 0, ferro: 0 };
+      selecionados.forEach(t => {
+        pacote.madeira += custos[t].madeira;
+        pacote.argila += custos[t].argila;
+        pacote.ferro += custos[t].ferro;
+      });
+
+      let pacotes = Math.min(
+        Math.floor(recursos.madeira / pacote.madeira || Infinity),
+        Math.floor(recursos.argila / pacote.argila || Infinity),
+        Math.floor(recursos.ferro / pacote.ferro || Infinity)
+      );
+
+      selecionados.forEach(t => tropas[t] = pacotes);
+      return tropas;
+    }
+
+    function exibirResultados(containerId, tropas, recursos) {
+      const container = document.getElementById(containerId);
+      let html = '';
+      let total = { madeira: 0, argila: 0, ferro: 0 };
+
+      for (const t in tropas) {
+        const qtd = tropas[t];
+        const c = custos[t];
+        total.madeira += qtd * c.madeira;
+        total.argila += qtd * c.argila;
+        total.ferro += qtd * c.ferro;
+        html += `<p class="mb-1 result-troops">${qtd.toLocaleString('pt-BR')} ${t.replace('_', ' ').replace(/^./, c => c.toUpperCase())}</p>`;
+      }
+
+      html += '<hr class="my-2">';
+      html += `<div class="result-summary">
+                <p><strong>Custo:</strong> ${total.madeira} Madeira, ${total.argila} Argila, ${total.ferro} Ferro</p>
+                <p><strong>Sobra:</strong> ${recursos.madeira - total.madeira} Madeira, ${recursos.argila - total.argila} Argila, ${recursos.ferro - total.ferro} Ferro</p>
+               </div>`;
+      container.innerHTML = html;
+    }
+
+    function showAlert(msg, tipo) {
+      const div = document.createElement('div');
+      div.className = `alert alert-${tipo}`;
+      div.textContent = msg;
+      document.getElementById('alert-container').appendChild(div);
+    }
+  </script>
+</body>
+</html>
